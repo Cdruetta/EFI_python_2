@@ -5,6 +5,8 @@
 - Octavio Victorio :computer:
 - Druetta Cristian :computer:
 
+**Profesor:**
+- Lucero Matias
 ---
 
 ## Comenzando 🚀
@@ -30,7 +32,7 @@ Qué necesitas para instalar el software y cómo instalarlo:
 
 3. **Crear el entorno virtual**
    ```bash
-   python3 -m venv env
+   python3 -m venv entorno
    ```
 
 4. **Activar el entorno virtual**
@@ -51,96 +53,159 @@ Qué necesitas para instalar el software y cómo instalarlo:
 ---
 
 ## Endpoints API 📋
+- A continuación se describen los endpoints de la API para interactuar con la aplicación.
 
-A continuación se describen los endpoints de la API:
+# Autenticación y Registro
 
-### Autenticación y Registro
-
-#### Iniciar sesión
-
-- **Método:** `POST`  
-- **Endpoint:** `/login`
-
-**Descripción:**  
-Permite al usuario iniciar sesión verificando las credenciales proporcionadas. Si las credenciales son correctas, establece la sesión.
+- **Iniciar sesión**
+   - Método: POST
+   - Endpoint: /login
+- **Descripción:**
+   - Permite al usuario iniciar sesión verificando las credenciales proporcionadas. Si las credenciales son correctas, establece la sesión con un token JWT.
 
 **Ejemplo de cuerpo de solicitud:**
-```json
 {
     "usuario": "admin",
     "contrasenia": "admin"
 }
-```
 
----
+**Ejemplo de respuesta:**
+{
+    "Token": "Bearer <token>"
+}
 
-#### Registro de usuario 📋
-
-- **Método:** `POST`  
-- **Endpoint:** `/register`
-
-**Descripción:**  
-Registra un nuevo usuario con un nombre de usuario y una contraseña hasheada.
+## Registro de usuario
+   - Método: POST
+   - Endpoint: /users
+- **Descripción:**
+   - Registra un nuevo usuario con un nombre de usuario y una contraseña hasheada. Solo un administrador puede crear nuevos usuarios.
 
 **Ejemplo de cuerpo de solicitud:**
-```json
+
 {
     "usuario": "octavio",
     "contrasenia": "12345678"
 }
-```
 
-### Gestión de Usuarios
+**Gestión de Usuarios**
 
-- **Método:** `POST`  
-- **Endpoint:** `/usuario`
-
-#### Mostrar Usuarios 📋
-
-**Descripción:**  
-Lista todos los usuarios registrados. Solo accesible para administradores.
+## Mostrar Usuarios
+   - Método: GET
+   - Endpoint: /users
+**Descripción:**
+   - Lista todos los usuarios registrados. Solo accesible para administradores.
 
 **Ejemplo de respuesta:**
-```json
+
 [
     {
-       "id": 1,
-       "usuario": "admin",
-       "contrasenia": true
+        "id": 1,
+        "usuario": "admin",
+        "activo": true,
+        "is_admin": true
     },
     {
-       "id": 2,
-       "usuario": "octavio",
-       "contrasenia": false
+        "id": 2,
+        "usuario": "octavio",
+        "activo": true,
+        "is_admin": false
     }
-    // Otros usuarios (si los hubiese)
 ]
-```
-
----
-
-### Crear un nuevo usuario (Admin) 📋
-
-- **Método:** `POST`  
-- **Endpoint:** `/admin`
-
-**Descripción:**  
-Crea un nuevo usuario, accesible solo para usuarios con permisos de administrador.
+## Actualizar Usuario
+   - Método: PUT
+   - Endpoint: /user/actualizar
+**Descripción:**
+   - Permite a un administrador actualizar los detalles de un usuario existente. Solo el administrador puede realizar esta acción.
 
 **Ejemplo de cuerpo de solicitud:**
-```json
 {
-    "usuario": "matias",
-    "contrasenia": "matias1234"
+    "id": 1,
+    "usuario": "octavio",
+    "contrasenia": "newpassword",
+    "activo": true
 }
-```
+
+##Eliminar Usuario
+   - Método: DELETE
+   - Endpoint: /user/eliminar
+**Descripción:**
+   - Permite a un administrador desactivar un usuario.
+
+**Ejemplo de cuerpo de solicitud:**
+{
+    "id": 2
+}
+
+# Gestión de Equipos
+
+## Mostrar Equipos
+   - Método: GET
+   - Endpoint: /equipos
+**Descripción:**
+   - Muestra todos los equipos. Los administradores obtienen más detalles, mientras que los usuarios normales reciben información mínima.
+
+**Ejemplo de respuesta:**
+[
+    {
+        "id": 1,
+        "nombre": "Equipo A",
+        "categoria_id": 2,
+        "modelo_id": 1,
+        "costo": 100,
+        "stock_id": 5,
+        "activo": true
+    }
+]
+
+## Crear Equipo
+   - Método: POST
+   - Endpoint: /equipos/crear
+**Descripción:**
+   - Permite a un administrador crear un nuevo equipo.
+
+**Ejemplo de cuerpo de solicitud:**
+{
+    "nombre": "Equipo X",
+    "modelo_id": 1,
+    "categoria_id": 2,
+    "costo": 200,
+    "stock_id": 3,
+    "marca_id": 1,
+    "activo": 1
+}
+
+## Actualizar Equipo
+   - Método: PUT
+   - Endpoint: /equipos/actualizar
+**Descripción:**
+   - Permite a un administrador actualizar un equipo existente.
+
+**Ejemplo de cuerpo de solicitud:**
+{
+    "id": 1,
+    "nombre": "Nuevo Equipo",
+    "modelo_id": 2,
+    "categoria_id": 3,
+    "costo": 250,
+    "stock_id": 4,
+    "marca_id": 2,
+    "activo": 0
+}
+
+## Eliminar Equipo
+   - Método: DELETE
+   - Endpoint: /equipos/eliminar
+**Descripción:**
+   - Permite a un administrador desactivar un equipo.
+
+**Ejemplo de cuerpo de solicitud:**
+{
+    "id": 2
+}
+
+**Autorizar JWT**
+   - Para los endpoints que requieren autenticación, asegúrate de enviar el token JWT en el encabezado de la solicitud como sigue:
+
+      - Authorization: Bearer <token>
 
 ---
-
-## Contribuir
-
-Si deseas contribuir al desarrollo de este proyecto, por favor abre un "issue" o envía un "pull request" con tus cambios.
-
----
-
-# EFI-python
